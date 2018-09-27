@@ -24,7 +24,7 @@ def shuffleArray(a):
                 taken[index] = True
     return shuffled_list
 
-def shuffleArrayBubbleSort(a):
+def shuffleArrayAppendToLists(a):
     array_copy = a.copy()
     shuffled_list = list()
     for i in range(0, len(a)):
@@ -36,6 +36,44 @@ def shuffleArrayBubbleSort(a):
         del(array_copy[index])
     return shuffled_list
 
+def shuffleArrayPriorities(a):
+    shuffled_array = list()
+    priorities = list()
+    bits = math.ceil(math.log(len(a),2))
+    priority_to_index = {}
+    used_priorities = list()
+    for i in range(0, len(a)):
+        priority = math.inf
+        while True:
+            priority = generateRandomIndex(bits)
+            if priority < len(a) and priority not in used_priorities:
+                break
+        used_priorities.append(priority)
+        priority_to_index[priority] = a[i]
+    for i in range(0, len(a)):
+        shuffled_array.append(priority_to_index[i])
+    return shuffled_array
 
-array = list(range(1,31))
-print(shuffleArrayBubbleSort(array))
+def shuffleArrayQuickSort(array, start=0, end=-1, startFlag = True):
+    if startFlag:
+        start = 0
+        end = len(array)-1
+    if start < end:
+        p = partition(array, start, end)
+        shuffleArrayQuickSort(array, start, p-1, False)
+        shuffleArrayQuickSort(array, p+1, end, False)
+    return array
+
+def partition(array, start, end):
+    pivot = array[end]
+    i = start
+    for j in range(start, end, 1):
+        if array[j] < pivot:
+            array[j], array[i] = array[i], array[j]
+            i = i+1
+    array[i], array[end] = array[end], array[i]
+    return i
+
+
+array = list(range(10, 0, -1))
+print(shuffleArrayQuickSort(array))
