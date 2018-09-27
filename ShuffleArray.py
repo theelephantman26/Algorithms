@@ -74,6 +74,30 @@ def partition(array, start, end):
     array[i], array[end] = array[end], array[i]
     return i
 
+def shuffleArrayQuickUnsort(array, start=0, end=-1, startFlag = True):
+    if startFlag:
+        start = 0
+        end = len(array)-1
 
-array = list(range(10, 0, -1))
-print(shuffleArrayQuickSort(array))
+    if start < end:
+        bits = math.ceil(math.log(end-start+1,2))
+        p_index = math.inf
+        while p_index < start or p_index > end:
+            p_index = start + generateRandomIndex(bits)
+        shuffleArrayQuickUnsort(array, start, p_index-1, False)
+        shuffleArrayQuickUnsort(array, p_index+1, end, False)
+        partitionUnsort(array, start, end, p_index)
+    return array
+
+def partitionUnsort(array, start, end, p_index):
+    pivot = array[p_index]
+    i = p_index
+    array[i], array[end] = array[end], array[i]
+    for j in range(end-1, start-1, -1):
+        if array[j] > pivot:
+            array[j], array[i] = array[i], array[j]
+            i = i-1
+
+
+array = list(range(11))
+print(shuffleArrayQuickUnsort(array))
