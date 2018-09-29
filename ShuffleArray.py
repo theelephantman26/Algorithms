@@ -26,15 +26,17 @@ def shuffleArray(a):
 
 def shuffleArrayAppendToLists(a):
     array_copy = a.copy()
+    bits_used = 0
     shuffled_list = list()
     for i in range(0, len(a)):
         index = math.inf
         bits = math.ceil(math.log(len(array_copy),2))
         while index >= len(array_copy):
             index = generateRandomIndex(bits)
+            bits_used = bits_used+bits
         shuffled_list.append(array_copy[index])
         del(array_copy[index])
-    return shuffled_list
+    return shuffled_list, bits_used
 
 def shuffleArrayPriorities(a):
     shuffled_array = list()
@@ -95,9 +97,13 @@ def partitionUnsort(array, start, end, p_index):
     array[i], array[end] = array[end], array[i]
     for j in range(end-1, start-1, -1):
         if array[j] > pivot:
-            array[j], array[i] = array[i], array[j]
+            array[j], array[i-1] = array[i-1], array[j]
             i = i-1
 
 
 array = list(range(11))
-print(shuffleArrayQuickUnsort(array))
+bits = list()
+for i in range(0,10000):
+    shuffled, bits_used = shuffleArrayAppendToLists(array)
+    bits.append(bits_used)
+print(sum(bits)/len(bits))
