@@ -92,11 +92,56 @@ def say_hello_to(name):
     print("Hello {0}. I hope you are doing well.".format(name))
 
 
-say_hello_to("Bhalchandra")
+# say_hello_to("Bhalchandra")
 
 '''
 Try making a decorator that returns the runtime and also returns the result
 '''
+def track_run_time(func):
+    # we don't know yet what arguments this wrapper will be taking
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # this way the decorator can be applied to any function
+        import time
+        start_time = time.time()
+        return_value = func(*args, **kwargs)
+        end_time = time.time()
+        print("This programme took {0} seconds to run.".format(end_time - start_time))
+        return return_value
+    return wrapper
+
+@track_run_time
+def quicksort_non_recur(array):
+    return quicksort(array, 0, len(array) - 1)
+
+def quicksort(array, low, high):
+    if low < high:
+        array, pdx = partition(array, low, high)
+        array = quicksort(array, low, pdx-1)
+        array = quicksort(array, pdx+1, high)
+    return array
+        
+def partition(array, low, high):
+    pdx = high
+    pivot = array[pdx]
+    i = low
+    for j in range(low, high+1):
+        if array[j] <= pivot:
+            array[j], array[i] = array[i], array[j]
+            i = i+1
+    return array, i-1
+
+
+import numpy as np
+arr = np.arange(1000000)
+np.random.shuffle(arr)
+
+quicksort_non_recur(arr)
+
+
+
+
+        
 
 
 
